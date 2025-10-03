@@ -1,0 +1,39 @@
+#include <karm-sys/entry.h>
+
+import Karm.Cli;
+import Karm.Http;
+import Karm.Core;
+import Karm.Sys;
+
+using namespace Karm;
+
+Async::Task<> entryPointAsync(Sys::Context& ctx) {
+    auto urlArg = Cli::operand<Str>("url"s, "URL to fetch"s, "localhost"s);
+
+    Cli::Command cmd{
+        "http-get"s,
+        "Send a GET request to a URL and print the response body"s,
+        {
+            {
+                "Request Options"s,
+                {
+                    urlArg,
+                },
+            },
+        }
+    };
+
+    co_trya$(cmd.execAsync(ctx));
+
+    auto url = Ref::parseUrlOrPath(urlArg.value(), co_try$(Sys::pwd()));
+    auto resp = co_trya$(Http::getAsync(url));
+    if (not resp->body)
+        co_return Error::invalidData("no body in response");
+
+    auto body = resp->body.take();
+
+    auto adaptedOut = Aio::adapt(Sys::out());
+    co_trya$(Aio::copyAsync(*body, adaptedOut));
+
+    co_return Ok();
+}
