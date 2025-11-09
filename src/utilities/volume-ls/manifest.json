@@ -1,9 +1,10 @@
 {
     "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
-    "id": "net-lookup",
-    "description": "Do a domain name lookup",
+    "id": "volume-ls",
     "type": "exe",
     "requires": [
+        "karm-sys",
+        "karm-fs",
         "karm-cli"
     ]
 }
