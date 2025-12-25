@@ -44,7 +44,7 @@ Res<> ls(Slice<Str> paths, Options const& options) {
 
 } // namespace Ls
 
-Async::Task<> entryPointAsync(Sys::Context& ctx) {
+Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
     auto allFlag = Cli::flag('a', "all"s, "Do not ignore entries starting with ."s);
     auto listFlag = Cli::flag('l', "list"s, "Use a long listing format."s);
     auto argsOperands = Cli::operand<Vec<Str>>("paths"s, "Directories to list."s);
@@ -52,16 +52,12 @@ Async::Task<> entryPointAsync(Sys::Context& ctx) {
     Cli::Command cmd{
         "ls"s,
         "List directory contents."s,
-        {
-            {
-                "Listing Options"s,
-                {
-                    allFlag,
-                    listFlag,
-                    argsOperands,
-                }
-            }
-        }
+        {{"Listing Options"s,
+          {
+              allFlag,
+              listFlag,
+              argsOperands,
+          }}}
     };
 
     co_trya$(cmd.execAsync(ctx));

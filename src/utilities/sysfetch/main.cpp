@@ -91,7 +91,7 @@ Res<> dumpKindness() {
 
 } // namespace Sysfetch
 
-Async::Task<> entryPointAsync(Sys::Context&) {
+Async::Task<> entryPointAsync(Sys::Context&, Async::CancellationToken) {
     Res<> res = Ok();
 
     Sys::println("{}", ART | Tty::BLUE);
