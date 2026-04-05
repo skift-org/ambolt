@@ -5,7 +5,7 @@ import Karm.Cli;
 
 using namespace Karm;
 
-Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
+Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
     auto mountOption = Cli::option<Ref::Url>(NONE, "mount"s, "volume to mount"s);
     auto fstabOption = Cli::option<Ref::Url>(NONE, "fstab"s, "Fs tab file to load and mount"s);
     auto pathOption = Cli::operand<Vec<Ref::Path>>("path"s, "Path to print information about"s);
@@ -25,7 +25,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         }
     };
 
-    co_trya$(cmd.execAsync(ctx));
+    co_trya$(cmd.execAsync(env));
     if (not cmd)
         co_return Ok();
 

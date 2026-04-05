@@ -5,7 +5,7 @@ import Karm.Sys;
 
 using namespace Karm;
 
-Async::Task<> entryPointAsync(Sys::Context& ctx) {
+Async::Task<> entryPointAsync(Sys::Env& env) {
     auto domainArg = Cli::operand<Str>("domain"s, "Domain name to lookup"s);
 
     Cli::Command cmd{
@@ -17,7 +17,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx) {
           }}}
     };
 
-    co_trya$(cmd.execAsync(ctx));
+    co_trya$(cmd.execAsync(env));
 
     auto ips = co_trya$(Sys::lookupAsync(domainArg.value()));
     co_try$(Io::format(Sys::out(), "{}:\n", domainArg.value()));

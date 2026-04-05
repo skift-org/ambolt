@@ -35,7 +35,7 @@ Res<> ls(Slice<Str> paths, Options const& options) {
     for (auto& path : paths) {
         if (paths.len() > 1)
             Sys::println("{}:", path);
-        auto url = Ref::parseUrlOrPath(path, try$(Sys::pwd()));
+        auto url = Ref::parseUrlOrPath(path, Sys::globalEnv().cwd());
         try$(ls(url, options));
     }
 
@@ -44,7 +44,7 @@ Res<> ls(Slice<Str> paths, Options const& options) {
 
 } // namespace Ls
 
-Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
+Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
     auto allFlag = Cli::flag('a', "all"s, "Do not ignore entries starting with ."s);
     auto listFlag = Cli::flag('l', "list"s, "Use a long listing format."s);
     auto argsOperands = Cli::operand<Vec<Str>>("paths"s, "Directories to list."s);
@@ -60,7 +60,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
           }}}
     };
 
-    co_trya$(cmd.execAsync(ctx));
+    co_trya$(cmd.execAsync(env));
 
     if (not cmd)
         co_return Ok();
@@ -73,7 +73,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
     if (argsOperands.value())
         co_try$(Ls::ls(argsOperands.value(), options));
     else
-        co_try$(Ls::ls(Ref::parseUrlOrPath(".", co_try$(Sys::pwd())), options));
+        co_try$(Ls::ls(Ref::parseUrlOrPath(".", env.cwd()), options));
 
     co_return Ok();
 }

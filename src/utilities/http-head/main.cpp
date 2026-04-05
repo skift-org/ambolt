@@ -6,7 +6,7 @@ import Karm.Core;
 
 using namespace Karm;
 
-Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken ct) {
+Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken ct) {
     auto urlArg = Cli::operand<Str>("url"s, "URL to fetch"s, "localhost"s);
 
     Cli::Command cmd{
@@ -22,9 +22,9 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken ct) {
         }
     };
 
-    co_trya$(cmd.execAsync(ctx));
+    co_trya$(cmd.execAsync(env));
 
-    auto url = Ref::parseUrlOrPath(urlArg.value(), co_try$(Sys::pwd()));
+    auto url = Ref::parseUrlOrPath(urlArg.value(), env.cwd());
     auto header = co_trya$(Http::headAsync(url, ct))->header;
     co_try$(header.unparse(Sys::out()));
 
