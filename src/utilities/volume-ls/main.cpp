@@ -4,6 +4,7 @@ import Karm.Fs;
 import Karm.Cli;
 
 using namespace Karm;
+using namespace Karm::Literals;
 
 Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
     auto mountOption = Cli::option<Ref::Url>(NONE, "mount"s, "volume to mount"s);

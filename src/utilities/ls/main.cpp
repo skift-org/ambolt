@@ -4,6 +4,7 @@ import Karm.Cli;
 import Karm.Sys;
 
 using namespace Karm;
+using namespace Karm::Literals;
 
 namespace Ls {
 

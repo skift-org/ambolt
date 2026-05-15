@@ -5,6 +5,7 @@ import Karm.Http;
 import Karm.Core;
 
 using namespace Karm;
+using namespace Karm::Literals;
 
 Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken ct) {
     auto urlArg = Cli::operand<Str>("url"s, "URL to fetch"s, "localhost"s);
